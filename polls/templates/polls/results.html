@@ -1,0 +1,22 @@
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<div class="container m-3 p-3">
+    <h1>Thank you for voting!</h1>
+    <div class="card-body">
+        <h3 class="card-title">{{ question.question_text }}</h3>
+        {% for choice in question.choice_set.all %}
+        <div class="row m-3">
+            <div class="col">{{ choice.choice_text }}</div>
+            <div class="col">{{ choice.votes }} vote{{ choice.votes|pluralize }}
+                {% if choice.is_most_voted %}
+                <span style="font-size: 0.6rem; color: white;" class="bg-success p-1">most voted</span>
+                {% endif %}
+            </div>         
+        </div>
+        {% endfor %}
+        <a href="{% url 'polls:index' %}" class="btn btn-secondary">Back</a>
+    </div>
+    
+</div>

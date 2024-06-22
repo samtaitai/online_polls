@@ -1,0 +1,39 @@
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<div class="container m-3 p-3">
+    <!-- it will generate url pattern localhost:8000/polls/new -->
+    <form action="{% url 'polls:create_poll' %}" method="post">
+        {% csrf_token %}
+        <legend><h1>Create a new poll</h1></legend>
+        <div class="mb-3">
+            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="" class="form-label">Poll Question</label>
+            <input type="text" class="form-control" id="question_text" name="question_text" required>
+        </div>
+        <div class="mb-3">
+            <label for="" class="form-label">Publish Date</label>
+            <input type="date" class="form-control" id="pub_date" name="pub_date" required>
+            <div id="pub_date_help" class="form-text">The question which publish date in the future won't be displayed until the date.</div>
+        </div>
+        <div class="mb-3">
+            <label for="" class="form-label">Set End Date</label>
+            <input type="date" class="form-control" id="end_date" name="end_date" required>
+        </div>
+        <div class="mb-3">
+            <label for="" class="form-label">How many poll choices do you want?</label>
+            <input type="number" class="form-control" id="num_of_choice" name="num_of_choice" required>
+            <ol class="list-group">
+                {% for i in ?? %}
+                <li class="list-group-item"><input class="form-control" type="text" id="choice_{{i}}" name="choice_{{i}}" placeholder="Enter a choice..."></li>
+            </ol>
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+        <a href="{% url 'polls:index' %}">
+            <button class="btn btn-secondary" type="button">Cancel</button>
+        </a>      
+    </form>
+</div>

@@ -1,0 +1,38 @@
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<div class="container m-3 p-3">
+    <div class="row d-flex align-items-center mb-3">
+        <div class="col"><h1>Open Polls</h1></div>
+        <div class="col">
+            <a href="{% url 'polls:create_poll' %}" class="btn btn-success">Add a new Poll</a>
+            <button class="btn btn-danger mx-2" type="button">Delete Polls</button>
+        </div>
+    </div>
+    {% if latest_question_list %}
+        {% for question in latest_question_list %}
+        {% if question.is_due %}
+        <div class="row my-2">
+            <div class="col">
+                <input class="form-check-input mx-2" type="checkbox" name="selected_poll"><span>{{ question.question_text }}</span>
+            </div>
+            <div class="col-4">
+                <button type="button" class="btn btn-outline-success btn-sm">Closed</button>
+                <a href="{% url 'polls:results' question.id %}" class="btn btn-info btn-sm">Result</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="row my-2">
+            <div class="col">
+                <input class="form-check-input mx-2" type="checkbox"> <a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
+            </div>
+            <div class="col-4"><button type="button" class="btn btn-outline-secondary btn-sm">On-going</button></div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>No polls are available.</p>
+    {% endif %}
+</div>
+

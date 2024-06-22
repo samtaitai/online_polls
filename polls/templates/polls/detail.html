@@ -1,0 +1,27 @@
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<div class="container m-3 p-3">
+    <!-- When the form is rendered in the browser, Django will replace {% url 'polls:vote' question.id %} with the actual URL for the vote view, including the question.id as part of the URL -->
+    <div class="card-body">
+        <form action="{% url 'polls:vote' question.id %}" method="post">
+            {% csrf_token %}
+            <h3 class="card-title">{{ question.question_text }}</h3>
+            <div class="mb-3">
+                {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+                {% for choice in question.choice_set.all %}
+                    <!-- request.POST['choice'] returns the ID of the selected choice -->
+                    <!-- key = 'id' attribute; value = 'value' attribute -->
+                    <input class="form-check-input" type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                    <label class="form-check-label" for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+                {% endfor %}
+            </div>
+            <button class="btn btn-info" type="button">Share it</button>
+            <button class="btn btn-primary" type="submit" value="Vote">Vote</button>
+            <!-- get around inside the site -->
+            <a href="{% url 'polls:index' %}" class="btn btn-secondary">Back</a>
+        </form>
+    </div>
+</div>
+
