@@ -78,24 +78,31 @@ def create_poll(request):
         # Each form field's data is retrieved by its name attribute
         question_text = request.POST['question_text']
         pub_date = request.POST['pub_date']
-        choice_1 = request.POST['choice_1']
-        choice_2 = request.POST['choice_2']
-        choice_3 = request.POST['choice_3']
+        end_date = request.POST['end_date']
+        # how many choices user chose
+        num_of_choice = int(request.POST['num_of_choice'])
         
         # Create the Question object
-        question = Question(question_text=question_text, pub_date=pub_date, is_voted=false)
+        question = Question(question_text=question_text, pub_date=pub_date, end_date=end_date)
         question.save()
         
         # Create Choice objects
         # question.choice_set.create(choice_text=choice_1) creates and saves a Choice object
         # choice_set is a related manager provided by Django for reverse relations (from Question to Choice).
         # By default, the related manager is named <model>_set
-        question.choice_set.create(choice_text=choice_1)
-        question.choice_set.create(choice_text=choice_2)
-        question.choice_set.create(choice_text=choice_3)
+        # question.choice_set.create(choice_text=choice_1)
+        # question.choice_set.create(choice_text=choice_2)
+        # question.choice_set.create(choice_text=choice_3)
+
+        # create as many choices as user chose 
+        for i in range(1, num_of_choice + 1):
+            choice_text = request.POST[f'choice_{i}']
+            if choice_text:
+                question.choice_set.create(choice_text=choice_text)
         
         # redirect to index page
         return redirect('polls:index')
     
     # If the request method is not POST (typically a GET request), this line renders the form template.
-    return render(request, 'polls/create_poll.html')
+    return render(request, 'polls/create_poll.html', 
+    {'num_of_choice': range(1, int(request.POST['num_of_choice'])+1)})

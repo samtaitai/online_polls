@@ -21,14 +21,14 @@
         </div>
         <div class="mb-3">
             <label for="" class="form-label">Set End Date</label>
-            <input type="date" class="form-control" id="end_date" name="end_date" required>
+            <input type="date" class="form-control" id="end_date" name="end_date" value="7">
         </div>
         <div class="mb-3">
             <label for="" class="form-label">How many poll choices do you want?</label>
             <input type="number" class="form-control" id="num_of_choice" name="num_of_choice" required>
             <ol class="list-group">
-                {% for i in ?? %}
-                <li class="list-group-item"><input class="form-control" type="text" id="choice_{{i}}" name="choice_{{i}}" placeholder="Enter a choice..."></li>
+                {% for i in num_of_choice %}
+                <li class="list-group-item"><input class="form-control" type="text" id="choice_{{i}}" name="choice_{{i}}" placeholder="Enter a choice {{i}}..."></li>
             </ol>
         </div>
         <button class="btn btn-primary" type="submit">Save</button>

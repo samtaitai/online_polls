@@ -7,7 +7,7 @@ from django.contrib import admin
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField("date published")
-    end_date = models.DateTimeField("due date")
+    end_date = models.DateTimeField("due date", default=timezone.now() + datetime.timedelta(days=7))
     is_due = models.BooleanField(default=False)
     # for this object's representation
     def __str__(self):
