@@ -3,19 +3,17 @@
 {% bootstrap_javascript %}
 
 <div class="container m-3 p-3">
-    <div class="row d-flex align-items-start mb-3">
-        <div class="col"><h1>Open Polls</h1></div>
-        <div class="col">
-            <a href="{% url 'polls:create_poll' %}" class="btn btn-success">Add a new Poll</a>
-        </div>
-        <div class="col">
-            <form id="deletePollsForm" action="{% url 'polls:delete_polls' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" id="poll_ids" name="poll_ids" value="">
+    <form id="deletePollsForm" action="{% url 'polls:delete_polls' %}" method="post">
+        {% csrf_token %} <!-- must have inside the form -->
+        <div class="row d-flex align-items-start mb-3">
+            <div class="col"><h1>Open Polls</h1></div>
+            <div class="col">
+                <a href="{% url 'polls:create_poll' %}" class="btn btn-success">Add a new Poll</a>
                 <button class="btn btn-danger" id="delete_polls_button" onclick="deletePolls()">Delete Polls</button>
-            </form>
+            </div>
         </div>
-    </div>
+        <input type="hidden" id="poll_ids" name="poll_ids" value="">
+    </form>
     {% if latest_question_list %}
     {% for question in latest_question_list %}
     {% if question.is_due %}

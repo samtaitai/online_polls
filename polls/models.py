@@ -57,9 +57,20 @@ class Choice(models.Model):
         # the hyphen (-) before a field name in the order_by method indicates descending order
         most_voted_choice = choices.order_by('-votes').first()
 
-        choices.update(is_most_voted=False)
-        most_voted_choice.is_most_voted = True
-        most_voted_choice.save()
+        # extracts the votes values from each Choice object in the QuerySet
+        votes_list = choices.values_list('votes', flat=True)
+        
+        # a list comprehension
+        filtered_votes = [vote for vote in votes_list if vote == most_voted_choice.votes]
+
+        if len(filtered_votes) == 1:
+            choices.update(is_most_voted=False)
+            most_voted_choice.is_most_voted = True
+            most_voted_choice.save()
+        else:
+            choices.update(is_most_voted=False)
+
+        
 
 
 
