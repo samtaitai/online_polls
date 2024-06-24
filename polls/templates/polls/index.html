@@ -27,7 +27,9 @@
             <div class="col">
                 <input class="form-check-input mx-2" type="checkbox"> <a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
             </div>
-            <div class="col-4"><button type="button" class="btn btn-outline-secondary btn-sm">On-going</button></div>
+            <div class="col-4">
+                <a href="{% url 'polls:detail' question.id %}" class="btn btn-outline-secondary btn-sm">On-going</a>
+            </div>
         </div>
         {% endif %}
         {% endfor %}

@@ -1,4 +1,5 @@
 import datetime
+from datetime import date
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
@@ -6,12 +7,22 @@ from django.contrib import admin
 # each model is represented by a class that subclasses django.db.models.Model.
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField("date published")
-    end_date = models.DateTimeField("due date", default=timezone.now() + datetime.timedelta(days=7))
+    pub_date = models.DateTimeField("date published", auto_now_add=True)
+    end_date = models.DateTimeField("due date", blank=True, null=True)
     is_due = models.BooleanField(default=False)
+
+    # save method override
+    # args = positional arguments
+    # kwargs = key-value pair arguments
+    def save(self):
+        if not self.end_date:
+            self.end_date = date.today() + datetime.timedelta(days=7)
+        super().save()
+
     # for this object's representation
     def __str__(self):
         return self.question_text
+
     # sort the column header for was_published_recently in admin page
     @admin.display(
         boolean=True,

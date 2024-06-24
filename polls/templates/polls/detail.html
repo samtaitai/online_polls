@@ -9,6 +9,9 @@
             {% csrf_token %}
             <h3 class="card-title">{{ question.question_text }}</h3>
             <div class="mb-3">
+                This vote is closed on {{ question.end_date }}
+            </div>
+            <div class="mb-3">
                 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
                 {% for choice in question.choice_set.all %}
                     <!-- request.POST['choice'] returns the ID of the selected choice -->

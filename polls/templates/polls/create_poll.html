@@ -14,21 +14,35 @@
             <label for="" class="form-label">Poll Question</label>
             <input type="text" class="form-control" id="question_text" name="question_text" required>
         </div>
-        <div class="mb-3">
-            <label for="" class="form-label">Publish Date</label>
-            <input type="date" class="form-control" id="pub_date" name="pub_date" required>
-            <div id="pub_date_help" class="form-text">The question which publish date in the future won't be displayed until the date.</div>
+        <div class="mb-3">         
+            <div class="row">
+                <div class="col">
+                    <label for="" class="form-label">Publish Date</label>
+                    <input type="date" class="form-control" id="pub_date" name="pub_date" required>
+                    <div id="pub_date_help" class="form-text">The question which publish date in the future won't be displayed until the date.</div>
+                </div>
+                <div class="col">
+                    <label for="" class="form-label">Set End Date</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date">
+                    <div id="end_date_help" class="form-text">The default is 7 days from the publish date.</div>
+                </div>
+            </div>            
         </div>
         <div class="mb-3">
-            <label for="" class="form-label">Set End Date</label>
-            <input type="date" class="form-control" id="end_date" name="end_date" value="7">
+            <div class="row">
+                <div class="col">
+                    <label for="" class="form-label">How many poll choices do you want?</label>
+                </div>
+                <div class="col d-flex">
+                    <input type="number" class="form-control" id="num_of_choice" name="num_of_choice" required>
+                    <button class="btn btn-outline-primary mx-2" type="button" onclick="generateChoices()">Set</button>
+                </div>
+            </div>  
         </div>
         <div class="mb-3">
-            <label for="" class="form-label">How many poll choices do you want?</label>
-            <input type="number" class="form-control" id="num_of_choice" name="num_of_choice" required>
-            <ol class="list-group">
-                {% for i in num_of_choice %}
-                <li class="list-group-item"><input class="form-control" type="text" id="choice_{{i}}" name="choice_{{i}}" placeholder="Enter a choice {{i}}..."></li>
+            <label for="choices_list" class="form-label">Poll choices</label>
+            <ol class="list-group" id="choices_list">
+                <!-- List items will be generated here -->
             </ol>
         </div>
         <button class="btn btn-primary" type="submit">Save</button>
@@ -37,3 +51,25 @@
         </a>      
     </form>
 </div>
+
+<script>
+    function generateChoices() {
+        let num_of_choice = document.getElementById('num_of_choice').value;
+        let choices_list = document.getElementById('choices_list');
+        //clear any existing list items
+        choices_list.innerHTML = '';
+        for (let i = 1; i <= num_of_choice; i++) {
+            let li = document.createElement('li');
+            li.className = 'list-group-item';
+            let input = document.createElement('input');
+            input.className = 'form-control'
+            input.type = 'text'
+            input.id = 'choice_' + i;
+            input.name = 'choice_' + i;
+            input.placeholder = 'Enter choice ' + i;
+
+            li.appendChild(input);
+            choices_list.appendChild(li);
+        }
+    }
+</script>
