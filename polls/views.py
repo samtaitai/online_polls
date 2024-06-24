@@ -1,9 +1,10 @@
 from django.db.models import F
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Choice, Question
 
@@ -104,3 +105,15 @@ def create_poll(request):
     # return render(request, 'polls/create_poll.html', 
     # {'num_of_choice': int(request.POST['num_of_choice'])+1})
     return render(request, 'polls/create_poll.html')
+
+def delete_polls(request):
+    print("Request received: ", request.method)
+    if request.method == 'POST':
+        poll_ids_string = request.POST['poll_ids'] # string value
+        poll_ids = [int(num) for num in poll_ids_string.split(',')]
+
+        for id in poll_ids:
+            Question.objects.filter(id=id).delete()
+
+    return redirect('polls:index')
+    

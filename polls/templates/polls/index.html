@@ -3,38 +3,64 @@
 {% bootstrap_javascript %}
 
 <div class="container m-3 p-3">
-    <div class="row d-flex align-items-center mb-3">
+    <div class="row d-flex align-items-start mb-3">
         <div class="col"><h1>Open Polls</h1></div>
         <div class="col">
             <a href="{% url 'polls:create_poll' %}" class="btn btn-success">Add a new Poll</a>
-            <button class="btn btn-danger mx-2" type="button">Delete Polls</button>
+        </div>
+        <div class="col">
+            <form id="deletePollsForm" action="{% url 'polls:delete_polls' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" id="poll_ids" name="poll_ids" value="">
+                <button class="btn btn-danger" id="delete_polls_button" onclick="deletePolls()">Delete Polls</button>
+            </form>
         </div>
     </div>
     {% if latest_question_list %}
-        {% for question in latest_question_list %}
-        {% if question.is_due %}
-        <div class="row my-2">
-            <div class="col">
-                <input class="form-check-input mx-2" type="checkbox" name="selected_poll"><span>{{ question.question_text }}</span>
-            </div>
-            <div class="col-4">
-                <button type="button" class="btn btn-outline-success btn-sm">Closed</button>
-                <a href="{% url 'polls:results' question.id %}" class="btn btn-info btn-sm">Result</a>
-            </div>
+    {% for question in latest_question_list %}
+    {% if question.is_due %}
+    <div class="row my-2" id="poll-{{question.id}}">
+        <div class="col">
+            <input class="form-check-input mx-2" type="checkbox" name="selected_poll" id="{{question.id}}">
+            <span>{{ question.question_text }}</span>
         </div>
-        {% else %}
-        <div class="row my-2">
-            <div class="col">
-                <input class="form-check-input mx-2" type="checkbox"> <a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
-            </div>
-            <div class="col-4">
-                <a href="{% url 'polls:detail' question.id %}" class="btn btn-outline-secondary btn-sm">On-going</a>
-            </div>
+        <div class="col-4">
+            <button type="button" class="btn btn-outline-success btn-sm">Closed</button>
+            <a href="{% url 'polls:results' question.id %}" class="btn btn-info btn-sm">Result</a>
         </div>
-        {% endif %}
-        {% endfor %}
+    </div>
+    {% else %}
+    <div class="row my-2" id="poll-{{question.id}}">
+        <div class="col">
+            <input class="form-check-input mx-2" type="checkbox" name="selected_poll" id="{{question.id}}"> 
+            <a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
+        </div>
+        <div class="col-4">
+            <a href="{% url 'polls:detail' question.id %}" class="btn btn-outline-secondary btn-sm">On-going</a>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
     {% else %}
         <p>No polls are available.</p>
     {% endif %}
 </div>
 
+<script>
+    function deletePolls() {
+        // checked items
+        const selectedPolls = document.querySelectorAll('input[name="selected_poll"]:checked');
+        // extract question.id only 
+        const pollsIds = Array.from(selectedPolls).map(poll => poll.id)
+
+        if (pollsIds.length > 0) {
+            // remove from screen 
+            pollsIds.forEach(id => {
+            document.getElementById(`poll-${id}`).remove();
+            })
+            // send value to views.py: POST extracted question_id 
+            document.getElementById('poll_ids').value = pollsIds;
+            document.getElementById('deletePollsForm').submit();
+        }
+    }
+</script>
