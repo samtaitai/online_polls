@@ -1,6 +1,8 @@
 {% load bootstrap5 %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
+<!--This loads Django's timezone template tags, which we'll need for date operations.-->
+{% load tz %}
 
 <div class="container m-3 p-3">
     <form id="deletePollsForm" action="{% url 'polls:delete_polls' %}" method="post">
@@ -16,7 +18,11 @@
     </form>
     {% if latest_question_list %}
     {% for question in latest_question_list %}
-    {% if question.is_due %}
+    <!--This gets the current date in the format "YYYY-MM-DD" and stores it in a variable-->
+    {% now "Y-m-d" as current_date %}
+    <!--This creates a temporary variable end_date with the question.end_date formatted as "YYYY-MM-DD"-->
+    {% with end_date=question.end_date|date:"Y-m-d" %}
+    {% if end_date < current_date %}
     <div class="row my-2" id="poll-{{question.id}}">
         <div class="col">
             <input class="form-check-input mx-2" type="checkbox" name="selected_poll" id="{{question.id}}">
@@ -38,6 +44,7 @@
         </div>
     </div>
     {% endif %}
+    {% endwith %}
     {% endfor %}
     {% else %}
         <p>No polls are available.</p>
